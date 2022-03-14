@@ -2,9 +2,9 @@ from bs4 import BeautifulSoup
 import requests
 import pandas as pd 
 
-def extract_page(page):
+def extract_page(keyword,location,page):
     headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.109 Safari/537.36'}
-    url = f'https://uk.indeed.com/jobs?q=python&l=London&start={page}'
+    url = f'https://uk.indeed.com/jobs?q={keyword}&l={location}&start={page}'
     result = requests.get(url, headers)
     html_file = BeautifulSoup(result.text, "html.parser")
     return html_file
@@ -30,8 +30,10 @@ def retrieve_file(html_file):
 
 
 job_list = []
+keyword = input("Enter the job keyword to search :")
+location = input("Enter the location where you want to job search :")
 for i in range(0,60,10):
-    page_list = extract_page(i)
+    page_list = extract_page(keyword, location,i)
     retrieve_file(page_list)  
 
 df = pd.DataFrame(job_list)
